@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-module.exports = mongoose.model('Post', new Schema({ 
+const Post = mongoose.model('Post', new Schema({ 
   title: String, 
   content: String,
   user: String,
@@ -9,3 +9,5 @@ module.exports = mongoose.model('Post', new Schema({
   created: {type: Date, default: Date.now},
   updated: {type: Date, default: Date.now}
 }))
+
+module.exports = Post;

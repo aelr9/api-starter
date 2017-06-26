@@ -1,51 +1,49 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user');
+const express = require('express');
+const router = express.Router();
 
-var jwt = require('jsonwebtoken');
-var config = require('../../config');
-var bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-router.post('/authenticate', function(req, res) {
+const config = require('../../config');
+const User = require('../models/user');
+
+router.post('/authenticate', (req, res) => {
   User.findOne({
     name: req.body.name
-  }, function(err, user) {
+  }, (err, user) => {
     if (err) throw err;
     if (!user) {
-      var err = new Error('User not found')
+      const err = new Error('User not found')
       err.status = 401;
       throw err;
     } else {
-      console.log(user);
-      console.log(req.body);
-      bcrypt.compare(req.body.password, user.password, function(err, cmp) {
+      bcrypt.compare(req.body.password, user.password, (err, cmp) => {
         if (err) {
           throw err;
         } else if (!cmp) {
-          var err = new Error('Authentication failed. Wrong password')
+          const err = new Error('Authentication failed. Wrong password')
           err.status = 401;
           throw err;
         } else {
-          var token = jwt.sign({name: user.name}, config.secret, {
+          const token = jwt.sign({name: user.name}, config.secret, {
             expiresIn: 86400 // expires in 24 hours
           })
 
-          res.json({ token: token });  
+          res.json({ token: token });
         }
       })
     }
   })
 })
 
-router.post('/register', function(req, res) {
-  bcrypt.hash(req.body.password, config.saltRounds, function(err, hash) {
+router.post('/register', (req, res) => {
+  bcrypt.hash(req.body.password, config.saltRounds, (err, hash) => {
     if (err) throw err;
-    console.log(hash);
     User.create({
       name: req.body.name,
       password: hash,
       admin: req.body.admin
-    }, function(err) {
+    }, (err) => {
       if (err) throw err;
       res.json({ message: 'User registered successfully' })
     })

@@ -1,10 +1,11 @@
-var express = require('express');
-var router = express.Router();
-var Tag = require('../models/tag');
+const express = require('express');
+const router = express.Router();
+
+const Tag = require('../models/tag');
 
 // get all
-router.get('/', function(req, res) {
-  Tag.find({}, {_id: 0, tag: 1}, function(err, tags) {
+router.get('/', (req, res) => {
+  Tag.find({}, {_id: 0, tag: 1}, (err, tags) => {
     if (err) throw err;
     res.json(tags.map(t => t.tag));
   })

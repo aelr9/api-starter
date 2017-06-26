@@ -1,17 +1,18 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user');
-var jwt = require('jsonwebtoken');
-var config = require('../../config');
-var postRoutes = require('./posts');
-var tagRoutes = require('./tags');
+const express = require('express');
+const router = express.Router();
+const jwt = require('jsonwebtoken');
 
-router.use(function(req, res, next) {
+const config = require('../../config');
+const User = require('../models/user');
+const postRoutes = require('./posts');
+const tagRoutes = require('./tags');
 
-  var token = req.headers['x-access-token'];
+router.use((req, res, next) => {
+
+  const token = req.headers['x-access-token'];
 
   if (token) {
-    jwt.verify(token, config.secret, function(err, decoded) {
+    jwt.verify(token, config.secret, (err, decoded) => {
       if (err) {
         throw err;
       } else {
@@ -20,17 +21,17 @@ router.use(function(req, res, next) {
       }
     })
   } else {
-    var err = new Error('No token provided');
+    const err = new Error('No token provided');
     err.status = 403;
     throw err;
   }
 })
 
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
   res.json({'status': 'ok'});
 })
 
-router.get('/users', function(req, res) {
+router.get('/users', (req, res) => {
   User.find({}, function(err, users) {
     if (err) throw err;
     res.json(users);
