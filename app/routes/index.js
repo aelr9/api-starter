@@ -4,10 +4,8 @@ const router = express.Router();
 const apiRoutes = require('./api');
 const auth = require('./auth');
 
-const port = process.env.PORT || 8080;
-
 router.get('/', (req, res) => {
-    res.send('Hello! The API is at http://localhost:' + port + '/api');
+    res.send('API Server Started. No CORS support');
 })
 
 router.use('/api', auth);
