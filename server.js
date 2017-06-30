@@ -7,9 +7,9 @@ const mongoose    = require('mongoose');
 const config      = require('./config');
 
 const routes      = require('./app/routes');
-    
+
 const port = process.env.PORT || 8080;
-mongoose.connect(config.database);
+mongoose.connect(process.env.NODEDEMO_DBURI);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

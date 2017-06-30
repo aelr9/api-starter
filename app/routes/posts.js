@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const async = require('async');
 
 const Post = require('../models/post');
 const Tag = require('../models/tag');
@@ -36,25 +37,94 @@ router.get('/', (req, res, next) => {
 // get a post
 router.get('/:id', (req, res, next) => {
   Post.findById(req.params.id, (err, post) => {
-    if (err) next(err);
-    res.json(post);
+    if (err) {
+      next(err);
+    } else if (req.user.name === post.user) {
+      const err = new Error('You are not allowed to see this post');
+      err.status = 403;
+      next(err);
+    } else {
+      res.json(post);
+    }
   })
 })
 
 // edit a post
 router.put('/:id', (req, res, next) => {
-  Post.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, post) => {
-    if (err) next(err);
-    res.json(post);
-  })
+  if (req.body.tags) {
+    const tags = req.body.tags.split(',').map(t => t.trim());
+    tags.map(tag => {
+      Tag.create({ tag });
+    })
+    req.body.tags = tags;
+  }
+
+  async.waterfall([
+    (cb) => {
+      Post.findById(req.params.id, (err, post) => {
+        if (err) {
+          cb(err, null);
+        } else if (post.user !== req.user.name) {
+          err = new Error('You are not allowed to edit this post');
+          err.status = 403;
+          cb(err, null);
+        } else {
+          cb(null, post);
+        }
+      })
+    },
+    (post, cb) => {
+      Object.assign(post, req.body);
+      post.save((err) => {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, post);
+        }
+      });
+
+    }
+  ], (err, post) => {
+    if (err) {
+      next(err);
+    } else {
+      res.json(post);
+    }
+  });
 })
 
 // delete a post
 router.delete('/:id', (req, res, next) => {
-  Post.findByIdAndRemove(req.params.id, (err) => {
-    if (err) next(err);
-    res.json({message: 'Post removed', id: req.params.id});
-  })
+  async.waterfall([
+    (cb) => {
+      Post.findById(req.params.id, (err, post) => {
+        if (err) {
+          cb(err, null);
+        } else if (post.user !== req.user.name) {
+          err = new Error('You are not allowed to delete this post');
+          err.status = 403;
+          cb(err, null);
+        } else {
+          cb(null, post);
+        }
+      })
+    },
+    (post, cb) => {
+      post.remove((err) => {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, post);
+        }
+      });
+    }
+  ], (err, post) => {
+    if (err) {
+      next(err);
+    } else {
+      res.json(post);
+    }
+  });
 })
 
 module.exports = router;

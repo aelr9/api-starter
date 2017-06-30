@@ -25,7 +25,7 @@ router.post('/authenticate', (req, res, next) => {
           err.status = 401;
           next(err);
         } else {
-          const token = jwt.sign({name: user.name}, config.secret, {
+          const token = jwt.sign({name: user.name, id: user._id}, config.secret, {
             expiresIn: 86400 // expires in 24 hours
           })
 
