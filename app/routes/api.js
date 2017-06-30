@@ -31,10 +31,6 @@ router.use((req, res, next) => {
   }
 })
 
-router.get('/', (req, res) => {
-  res.json({'status': 'ok'});
-})
-
 router.get('/users', (req, res, next) => {
   User.find({}, function(err, users) {
     if (err) next(err);

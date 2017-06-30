@@ -8,8 +8,8 @@ router.get('/', (req, res) => {
     res.send('API Server Started. No CORS support');
 })
 
-router.use('/api', auth);
-router.use('/api', apiRoutes);
+router.use('/', auth);
+router.use('/', apiRoutes);
 
 // const User = require('../models/user');
 // router.get('/setup', function(req, res) {
