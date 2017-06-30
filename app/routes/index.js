@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
     res.send('Hello! The API is at http://localhost:' + port + '/api');
 })
 
-router.use('/', auth);
+router.use('/api', auth);
 router.use('/api', apiRoutes);
 
 // const User = require('../models/user');

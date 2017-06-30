@@ -1,5 +1,6 @@
 const config = {
-  'secret': 'SE9r5(%8Yhg3kuW*swIy1Um8!1yTn;',
+  'secret': process.env.NODEDEMO_SECRET,
+  'database': process.env.NODEDEMO_DBURI,
   'saltRounds': 10,
 };
 
