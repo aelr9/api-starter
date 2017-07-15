@@ -19,13 +19,6 @@ app.use(bodyParser.json());
 
 app.use(morgan('dev'));
 
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Methods", ["GET", "POST", "PUT", "DELETE"]);
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token");
-//   next();
-// })
-
 app.use('/', routes);
 
 // catch 404 and forward to error handler

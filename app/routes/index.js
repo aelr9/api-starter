@@ -4,6 +4,9 @@ const router = express.Router();
 const apiRoutes = require('./api');
 const auth = require('./auth');
 
+// const corsMiddleare = require('../middlewares/cors');
+// router.use(corsMiddleare);
+
 router.get('/', (req, res) => {
     res.send('API Server Started. No CORS support');
 })
